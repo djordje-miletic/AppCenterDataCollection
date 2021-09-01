@@ -30,7 +30,9 @@ namespace AppCenterDataCollection
                         BranchBuildCompletedEntity buildInfo = await branchLogicClass.BuildBranch(branch);
                         
                         if(buildInfo != null)
-                            Console.WriteLine("Branch: " + buildInfo.SourceBranch + " | build" + buildInfo.Result + " | ");
+                            Console.WriteLine("Branch: " + buildInfo.SourceBranch + " | build: " + buildInfo.Result + " | ");
+                        else
+                            Console.WriteLine("Branch: " + buildInfo.SourceBranch + "can't start build");
                     }
                 }
                 else
