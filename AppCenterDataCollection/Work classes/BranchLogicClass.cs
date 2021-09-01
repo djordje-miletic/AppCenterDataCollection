@@ -14,6 +14,8 @@ namespace AppCenterDataCollection.Work_classes
 {
     public class BranchLogicClass
     {
+        private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Program));
+
         private string baseAddress;
         private string branchesAPI = "branches";
         private string buildAPI = "branches/{0}/builds";
@@ -69,6 +71,7 @@ namespace AppCenterDataCollection.Work_classes
             }
             catch (Exception ex)
             {
+                log.Error("Error on BranchLogicClass.GetBranches: ", ex);
                 return null;
             }
         }
@@ -82,39 +85,47 @@ namespace AppCenterDataCollection.Work_classes
         {
             BranchBuildCompletedEntity result = null;
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri(baseAddress);
-
-                client.DefaultRequestHeaders.Add("X-API-Token", token);
-                client.DefaultRequestHeaders.Accept
-                    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                string formatedApiCall = buildAPI.Replace("{0}", branchData.branch.Name);
-                string apiCallForBuild = baseAddress + formatedApiCall;
-
-                BranchBuildData branchInformation = new BranchBuildData()
+                using (HttpClient client = new HttpClient())
                 {
-                    SourceVersion = branchData.branch.Commit.Sha,
-                    Debug = true
-                };
+                    client.BaseAddress = new Uri(baseAddress);
 
-                var byteContent =  CreateJsonRequestData(branchInformation);
+                    client.DefaultRequestHeaders.Add("X-API-Token", token);
+                    client.DefaultRequestHeaders.Accept
+                        .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseMessage = await client.PostAsync(apiCallForBuild, byteContent);
+                    string formatedApiCall = buildAPI.Replace("{0}", branchData.branch.Name);
+                    string apiCallForBuild = baseAddress + formatedApiCall;
 
-                if(responseMessage.IsSuccessStatusCode)
-                {
-                    string contentJson = await responseMessage.Content.ReadAsStringAsync();
+                    BranchBuildData branchInformation = new BranchBuildData()
+                    {
+                        SourceVersion = branchData.branch.Commit.Sha,
+                        Debug = true
+                    };
 
-                    result = JsonConvert.DeserializeObject<BranchBuildCompletedEntity>(contentJson);
+                    var byteContent = CreateJsonRequestData(branchInformation);
 
-                    return result;
+                    HttpResponseMessage responseMessage = await client.PostAsync(apiCallForBuild, byteContent);
+
+                    if (responseMessage.IsSuccessStatusCode)
+                    {
+                        string contentJson = await responseMessage.Content.ReadAsStringAsync();
+
+                        result = JsonConvert.DeserializeObject<BranchBuildCompletedEntity>(contentJson);
+
+                        return result;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
-                {
-                    return null;
-                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error on BranchLogicClass.BuildBranch: ", ex);
+                throw;
             }
         }
 
