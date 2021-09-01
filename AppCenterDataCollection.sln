@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31529.145
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppCenterDataCollection", "AppCenterDataCollection\AppCenterDataCollection.csproj", "{8641AD80-7D1E-4CEB-9713-32FF49E68941}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppCenterDataCollectionEntities", "AppCenterDataCollectionEntities\AppCenterDataCollectionEntities.csproj", "{865E0B7E-2E67-46BE-BFF9-C70A7A65B479}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8641AD80-7D1E-4CEB-9713-32FF49E68941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8641AD80-7D1E-4CEB-9713-32FF49E68941}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8641AD80-7D1E-4CEB-9713-32FF49E68941}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8641AD80-7D1E-4CEB-9713-32FF49E68941}.Release|Any CPU.Build.0 = Release|Any CPU
+		{865E0B7E-2E67-46BE-BFF9-C70A7A65B479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{865E0B7E-2E67-46BE-BFF9-C70A7A65B479}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{865E0B7E-2E67-46BE-BFF9-C70A7A65B479}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{865E0B7E-2E67-46BE-BFF9-C70A7A65B479}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51268620-5491-4DA8-A8F7-30C25BD9B4C7}
+	EndGlobalSection
+EndGlobal
