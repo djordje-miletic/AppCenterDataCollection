@@ -28,8 +28,9 @@ namespace AppCenterDataCollection
                     foreach (var branch in branches)
                     {
                         BranchBuildCompletedEntity buildInfo = await branchLogicClass.BuildBranch(branch);
-
-                        Console.WriteLine("Branch: " + buildInfo.SourceBranch + " | build" + buildInfo.Result + " | ");
+                        
+                        if(buildInfo != null)
+                            Console.WriteLine("Branch: " + buildInfo.SourceBranch + " | build" + buildInfo.Result + " | ");
                     }
                 }
                 else
