@@ -1,4 +1,5 @@
 This's application for starting build of all branches of one application that's connected to App Center.
+Affter starting all build app waits untill all builds are finished and prints data for every build.
 -------------------------------------------------------------------------------------------------------
 
 This's regular console application.
