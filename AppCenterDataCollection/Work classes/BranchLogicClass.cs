@@ -129,6 +129,62 @@ namespace AppCenterDataCollection.Work_classes
             }
         }
 
+        public async Task<BranchBuildCompletedEntity> CheckBuildStatus(BranchBuildCompletedEntity startedBuildInfo)
+        {
+            List<BranchBuildCompletedEntity> builds = null;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseAddress);
+
+                    client.DefaultRequestHeaders.Add("X-API-Token", token);
+                    client.DefaultRequestHeaders.Accept
+                        .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    string formatedApiCall = buildAPI.Replace("{0}", startedBuildInfo.SourceBranch);
+                    string apiCallForBuild = baseAddress + formatedApiCall;
+
+                    bool breakLoop = false;
+
+                    do
+                    {
+                        HttpResponseMessage responseMessage = await client.GetAsync(apiCallForBuild);
+
+                        if (responseMessage.IsSuccessStatusCode)
+                        {
+                            string contentJson = await responseMessage.Content.ReadAsStringAsync();
+
+                            builds = JsonConvert.DeserializeObject<List<BranchBuildCompletedEntity>>(contentJson);
+
+                            if(builds != null)
+                            {
+                                var currentBuild = builds.FirstOrDefault(x => x.Id == startedBuildInfo.Id);
+
+                                if (currentBuild != null)
+                                {
+                                    return currentBuild;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    } 
+                    while (breakLoop == false);
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error on BranchLogicClass.CheckBuildStatus: ", ex);
+                throw;
+            }
+        }
+
         #endregion Public methods
 
         #region Private methods

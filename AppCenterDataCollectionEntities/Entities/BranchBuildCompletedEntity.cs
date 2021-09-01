@@ -18,5 +18,6 @@ namespace AppCenterDataCollectionEntities.Entities
         public string Result { get; set; }
         public string SourceBranch { get; set; }
         public string SourceVersion { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
