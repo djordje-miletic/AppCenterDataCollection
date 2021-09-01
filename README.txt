@@ -9,4 +9,6 @@ Before you start it you need to configure four things in App.config file.
 4) key = "token" - token can be user or app token, it's all the same. 
 	For generating tokens you can find more info here: https://docs.microsoft.com/en-us/appcenter/api-docs/
 
-Next step is to start application and watch magic happen
+Next step is to start application and watch magic happen.
+
+*Note if first build isn't started from App Center application can't start builds.
