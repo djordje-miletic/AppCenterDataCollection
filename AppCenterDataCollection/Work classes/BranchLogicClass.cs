@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-
+using System.Threading;
 
 namespace AppCenterDataCollection.Work_classes
 {
@@ -167,6 +167,8 @@ namespace AppCenterDataCollection.Work_classes
                                     return currentBuild;
                                 }
                             }
+
+                            Thread.Sleep(60000);
                         }
                         else
                         {

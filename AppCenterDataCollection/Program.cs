@@ -66,6 +66,7 @@ namespace AppCenterDataCollection
                                 BranchBuildCompletedEntity buildInfo = await branchLogicClass.CheckBuildStatus(build);
 
                                 return buildInfo;
+
                             }).Unwrap());
                         }
 
@@ -110,6 +111,8 @@ namespace AppCenterDataCollection
                 {
                     Console.WriteLine("Didn't fatch any branches");
                 }
+
+                Console.WriteLine("All done!");
             }
             catch (Exception ex)
             {
