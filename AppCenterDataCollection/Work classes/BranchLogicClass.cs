@@ -209,7 +209,7 @@ namespace AppCenterDataCollection.Work_classes
         {
             TimeSpan buildCompletedIn = DateTime.Parse(branchData.FinishTime) - DateTime.Parse(branchData.StartTime);
 
-            Console.WriteLine("Build finished, branch: " + branchData.SourceBranch + "  build status: " + branchData.Result + " in " + buildCompletedIn.Minutes + ".");
+            Console.WriteLine("Build finished, branch: " + branchData.SourceBranch + "  build status: " + branchData.Result + " in " + buildCompletedIn.Minutes + " minutes.");
         }
 
         #endregion Public methods
