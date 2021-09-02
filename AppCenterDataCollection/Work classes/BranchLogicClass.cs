@@ -129,7 +129,12 @@ namespace AppCenterDataCollection.Work_classes
             }
         }
 
-        public async Task<BranchBuildCompletedEntity> CheckBuildStatus(BranchBuildCompletedEntity startedBuildInfo)
+        /// <summary>
+        /// Method that cheks if build if finioshed by started build ID
+        /// </summary>
+        /// <param name="startedBuildInfo"></param>
+        /// <returns></returns>
+        public async Task<BranchBuildCompletedEntity> CheckBuildStatus(BranchBuildCompletedEntity startedBuildInfo, IProgress<BranchBuildCompletedEntity> progress)
         {
             List<BranchBuildCompletedEntity> builds = null;
 
@@ -164,10 +169,19 @@ namespace AppCenterDataCollection.Work_classes
 
                                 if (currentBuild != null)
                                 {
-                                    return currentBuild;
+                                    if(currentBuild.Status == "completed")
+                                    {
+                                        if (progress != null)
+                                        {
+                                            progress.Report(currentBuild);
+                                        }
+
+                                        return currentBuild;
+                                    }
                                 }
                             }
 
+                            //Don't want't to spam server witrh requests
                             Thread.Sleep(60000);
                         }
                         else
@@ -185,6 +199,17 @@ namespace AppCenterDataCollection.Work_classes
                 log.Error("Error on BranchLogicClass.CheckBuildStatus: ", ex);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Method that is used as delegate to report porgress for every thread
+        /// </summary>
+        /// <param name="branchData"></param>
+        public void ReportFinishedBuildData(BranchBuildCompletedEntity branchData)
+        {
+            TimeSpan buildCompletedIn = DateTime.Parse(branchData.FinishTime) - DateTime.Parse(branchData.StartTime);
+
+            Console.WriteLine("Build finished, branch: " + branchData.SourceBranch + "  build status: " + branchData.Result + " in " + buildCompletedIn.Minutes + ".");
         }
 
         #endregion Public methods

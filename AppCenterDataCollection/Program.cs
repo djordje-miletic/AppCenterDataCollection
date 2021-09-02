@@ -42,7 +42,7 @@ namespace AppCenterDataCollection
                         if (buildInfo != null)
                         {
                             //Saving branches that build is started
-                            Console.WriteLine("Branch: " + buildInfo.SourceBranch + " | build started: " + buildInfo.StartTime);
+                            Console.WriteLine("Branch: " + buildInfo.SourceBranch + " | build started");
                             startedBuildsInformations.Add(buildInfo);
                         }
                         else
@@ -51,7 +51,9 @@ namespace AppCenterDataCollection
 
                     Console.WriteLine("All possible builds started");
 
-                    if(startedBuildsInformations != null && startedBuildsInformations.Count > 0)
+                    var progressIndicator = new Progress<BranchBuildCompletedEntity>(branchLogicClass.ReportFinishedBuildData);
+
+                    if (startedBuildsInformations != null && startedBuildsInformations.Count > 0)
                     {
                         CancellationTokenSource source = new CancellationTokenSource();
                         CancellationToken token = source.Token;
@@ -63,7 +65,7 @@ namespace AppCenterDataCollection
                         {
                             tasks.Add(Task.Factory.StartNew(async () =>
                             {
-                                BranchBuildCompletedEntity buildInfo = await branchLogicClass.CheckBuildStatus(build);
+                                BranchBuildCompletedEntity buildInfo = await branchLogicClass.CheckBuildStatus(build, progressIndicator);
 
                                 return buildInfo;
 
@@ -74,14 +76,6 @@ namespace AppCenterDataCollection
                         {
                             Task kolektor = factory.ContinueWhenAll(tasks.ToArray(), (results) =>
                             {
-                                Console.WriteLine("Collecting all build info");
-
-                                foreach(var result in results)
-                                {
-                                    TimeSpan buildCompletedIn = DateTime.Parse(result.Result.StartTime) - DateTime.Parse(result.Result.FinishTime);
-
-                                    Console.WriteLine(result.Result.SourceBranch + "  build status: " + result.Result.Status + " in " + buildCompletedIn.Minutes + ". Link to build logs: ");
-                                }
                                 
                             }, token);
 
