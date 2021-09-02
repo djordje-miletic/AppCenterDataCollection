@@ -92,7 +92,11 @@ namespace AppCenterDataCollection
                                     Console.WriteLine("Exception: " + e.GetType().Name);
                             }
 
-                            log.Error("Error in main function", ae);
+                            log.Error("Error in gahtering threads", ae);
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Error in thread part of code", ex);
                         }
                         finally
                         {
