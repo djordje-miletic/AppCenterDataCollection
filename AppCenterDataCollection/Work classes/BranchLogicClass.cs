@@ -19,6 +19,7 @@ namespace AppCenterDataCollection.Work_classes
         private string baseAddress;
         private string branchesAPI = "branches";
         private string buildAPI = "branches/{0}/builds";
+        private string buildIdApi = "builds";
         private string token;
 
         #region Constructor
@@ -136,7 +137,7 @@ namespace AppCenterDataCollection.Work_classes
         /// <returns></returns>
         public async Task<BranchBuildCompletedEntity> CheckBuildStatus(BranchBuildCompletedEntity startedBuildInfo, IProgress<BranchBuildCompletedEntity> progress)
         {
-            List<BranchBuildCompletedEntity> builds = null;
+            BranchBuildCompletedEntity build = null;
 
             try
             {
@@ -148,8 +149,7 @@ namespace AppCenterDataCollection.Work_classes
                     client.DefaultRequestHeaders.Accept
                         .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    string formatedApiCall = buildAPI.Replace("{0}", startedBuildInfo.SourceBranch);
-                    string apiCallForBuild = baseAddress + formatedApiCall;
+                    string apiCallForBuild = baseAddress + buildIdApi + "/" + startedBuildInfo.Id;
 
                     bool breakLoop = false;
 
@@ -161,23 +161,18 @@ namespace AppCenterDataCollection.Work_classes
                         {
                             string contentJson = await responseMessage.Content.ReadAsStringAsync();
 
-                            builds = JsonConvert.DeserializeObject<List<BranchBuildCompletedEntity>>(contentJson);
+                            build = JsonConvert.DeserializeObject<BranchBuildCompletedEntity>(contentJson);
 
-                            if(builds != null)
+                            if(build != null)
                             {
-                                var currentBuild = builds.FirstOrDefault(x => x.Id == startedBuildInfo.Id);
-
-                                if (currentBuild != null)
+                                if(build.Status == "completed")
                                 {
-                                    if(currentBuild.Status == "completed")
+                                    if (progress != null)
                                     {
-                                        if (progress != null)
-                                        {
-                                            progress.Report(currentBuild);
-                                        }
-
-                                        return currentBuild;
+                                        progress.Report(build);
                                     }
+
+                                    return build;
                                 }
                             }
 
@@ -209,7 +204,7 @@ namespace AppCenterDataCollection.Work_classes
         {
             TimeSpan buildCompletedIn = DateTime.Parse(branchData.FinishTime) - DateTime.Parse(branchData.StartTime);
 
-            Console.WriteLine("Build finished, branch: " + branchData.SourceBranch + "  build status: " + branchData.Result + " in " + buildCompletedIn.Minutes + " minutes.");
+            Console.WriteLine("Build finished | branch: " + branchData.SourceBranch + "  build status: " + branchData.Result + " in " + buildCompletedIn.Minutes + " minute(s).");
         }
 
         #endregion Public methods
